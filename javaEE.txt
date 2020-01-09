@@ -1,0 +1,71 @@
+Servlets Calling / communications
+1. Request dispatcher (calling from one's own website)
+2. Send Redirect ( from another website)
+Session is for a particular browser.
+
+
+
+package com.deloitte;
+
+import java.io.IOException;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/add")
+public class AdderServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	protected void service(HttpServletRequest request,HttpServletResponse response)throws ServletException, IOException {
+		int number1 = Integer.parseInt(request.getParameter("num1"));
+		int number2 = Integer.parseInt(request.getParameter("num2"));
+		int sum = number1+number2;
+		RequestDispatcher rd =request.getRequestDispatcher("cube");
+		request.setAttribute("Sum",sum);
+		rd.forward(request, response);
+	}
+ 
+
+}
+
+package com.deloitte;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+
+@WebServlet("/cube")
+public class CubeServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+	protected void service (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		int sum =(int)request.getAttribute("Sum");
+		int cube = sum*sum*sum;
+	
+		response.getWriter().println("Answer =" + cube);
+	}
+
+}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Hello</title>
+</head>
+<body>
+<form action = "add" method = "post">
+Enter numbers <input type = "text" name = "num1"><br>
+<input type = "text" name = "num2"><br>
+
+<input type = "submit" value = "enter">
+</form>
+</body>
+</html>

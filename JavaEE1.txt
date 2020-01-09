@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<form action="show" method="post">
+Enter name<input type="text" name="name">
+<br>
+Enter gender<input type="radio" value="male" name="gender">Male
+ <input type="radio" value="female" name="gender">female
+ <br>
+ languages known<input type="checkbox" name="cblang" value="java">Java
+ 				<input type="checkbox" name="cblang" value="c++">c++
+ 				<input type="checkbox" name="cblang" value="python">python
+ <br>
+ <select name="country">
+ <option>india</option>
+ <option>srilanka</option>
+  <option>china</option>
+ <option>USA</option>
+
+ </select>
+ <br>
+ <input type="submit" value="enter">
+</form>
+</body>
+</html>
+
+
+
+
+
+
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+    <%@ page import="com.deloitte.Person" %>
+ 
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<%!
+Person p;
+
+ %>
+ <%
+ p=(Person)request.getAttribute("person");
+ %>
+<body>
+
+<style>
+table
+{
+border: "1 solid red ";
+color:blue;
+
+}
+</style>
+<h1>Person Info</h1>
+
+<table>
+<tr>
+<th>Property</th>
+<th>Value</th>
+</tr>
+
+<tr>
+<td>Name</td>
+<td><%=p.getName() %></td>
+</tr>
+<tr>
+
+<td>Gender</td>
+<td><%=p.getGender() %></td>
+</tr>
+
+<tr>
+<td>Languages</td>
+<td><%=p.getLangs() %></td>
+</tr>
+
+<tr>
+<td>Country</td>
+<td><%=p.getCountry() %></td>
+</tr>
+
+
+</table>
+
+</body>
+</html>
+
+package com.deloitte;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+
+@WebServlet("/show")
+public class ShowServlet extends HttpServlet{
+	@Override
+	public void service (HttpServletRequest req,HttpServletResponse res)throws ServletException, IOException {
+		String name = req.getParameter("txtname");
+		String gender = req.getParameter("gender");
+		List<String>langs = Arrays.asList(req.getParameterValues("cblang"));
+		String country = req.getParameter("country");
+		
+		Person person = new Person (name,gender,langs,country);
+		RequestDispatcher rd = req.getRequestDispatcher("view.jsp");
+		req.setAttribute("person", person);
+		rd.forward(req, res);
+    }
+    }
+    
+    
+    package com.deloitte;
+
+import java.util.List;
+
+public class Person {
+	private String name;
+	private String gender;
+	private List<String> langs;
+	private String country;
+	
+	
+	public Person() {
+		
+	}
+	public Person(String name, String gender, List<String> langs, String country) {
+		
+		this.name = name;
+		this.gender = gender;
+		this.langs = langs;
+		this.country = country;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getGender() {
+		return gender;
+	}
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+	public List<String> getLangs() {
+		return langs;
+	}
+	public void setLangs(List<String> langs) {
+		this.langs = langs;
+	}
+	public String getCountry() {
+		return country;
+	}
+	public void setCountry(String country) {
+		this.country = country;
+	}
+	
+	
+	
+}
+
+

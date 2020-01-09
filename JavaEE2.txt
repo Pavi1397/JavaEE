@@ -1,0 +1,91 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%> <!DOCTYPE html>
+      <%@ page import="com.deloitte.estore.model.Product" %>
+         <%@ page import="java.util.List" %>
+       
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+
+<%
+List<Product> products=(List<Product>)session.getAttribute("products");
+%>
+<table border="1">
+<tr>
+<th>Product ID </th>
+<th>Product Name</th>
+<th>Price</th>
+<th>Update</th>
+</tr>
+<%
+for(Product p:products)
+{
+	out.println("<tr><td>"+p.getPid()+"</td>");
+	out.println("<td>"+p.getPname()+"</td>");
+	out.println("<td>" +p.getPrice()+ "</td></tr>");
+	out.println("<td><a href=update?pid="+p.getPid()+">Update</a></td>");}
+%>
+</table>
+
+</body>
+</html>
+
+
+
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+
+<form action="addproduct" method="post">
+Enter product id:<input type="number" name="txtpid"><br>
+Enter product name:<input type="text"name="txtpname">
+Enter product price:<input type="text"name="txtprice">
+<input type="submit" value="save">
+
+</form>
+</body>
+</html>
+
+package com.deloitte.estore.controller;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.deloitte.estore.model.Product;
+import com.deloitte.estore.service.ProductService;
+import com.deloitte.estore.service.ProductServiceImpl;
+
+@WebServlet("/update")
+public class UpdateProductController extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+    
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		int prodId = Integer.parseInt(request.getParameter("pid"));
+		ProductService service = new ProductServiceImpl();
+		Product p1;
+		try {
+			p1=service.getProductById(prodId);
+			
+			if(service.updateProduct(p1)) {
+				response.getWriter().println("Product Updated");
+			}
+		}
+		catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+
+}
